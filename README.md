@@ -1,5 +1,15 @@
 # genbank-parser
 
+## getting GenBank data from FTP server
+### wget -r 'ftp://ftp.ncbi.nlm.nih.gov/genbank/gbmam1.seq.gz'
+
+
+## Importing GenBank objects into BioPython
+
+### from Bio import SeqIO
+### f = SeqIO.parse("gbmam7.seq", 'gb')   # creates a generator
+### s = next(f)                           # work on find another way to go through generator
+
 ## accession number
 The accession number is stored in the SeqIO object (s):
 ### s.annotations['accessions']
