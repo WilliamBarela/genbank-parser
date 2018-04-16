@@ -21,9 +21,17 @@ def reg_parser(regex, filename):
 def reg_row_parser(regex, filename):
     """An example of regex here is r'TK\d+' """
     file = seq_to_dict(filename)
+
     rows = []
     for record in file:
-        rows.append([record.annotations['accessions'][0], re.search(regex, record.description).group(0)]) if re.search(regex, record.description) else None
+        if re.search(regex, record.description):
+            # fields to be included in output file.
+            fields = [
+                      filename,                                         # filename
+                      record.annotations['accessions'][0],              # accession number
+                      re.search(regex, record.description).group(0)     # TK/TM/TTU Number
+                     ]
+            rows.append(fields)
     return rows
 
 def reaper():
