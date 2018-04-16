@@ -12,7 +12,19 @@ def data_parser(filename):
     rows = [[filename, record.annotations['accessions'], record.description] if re.search(r'TK\d+', record.description).string else None for record in file]
     rows.remove(None)
     
+def reg_parser(regex, filename):
+    """An example of regex here is r'TK\d+' """
+    file = seq_to_dict(filename)
+    for record in file:
+        print (record.annotations['accessions'][0] + ", " + re.search(regex, record.description).group(0)) if re.search(regex, record.description) else None
 
+def reg_row_parser(regex, filename):
+    """An example of regex here is r'TK\d+' """
+    file = seq_to_dict(filename)
+    rows = []
+    for record in file:
+        rows.append([record.annotations['accessions'][0], re.search(regex, record.description).group(0)]) if re.search(regex, record.description) else None
+    return rows
 
 def reaper():
     """ Don't use the reaper, it eats up too much memory """
@@ -28,7 +40,3 @@ def save_to_csv(input_filename, output_filename, data):
     finally:
         file.close()
     return "CSV with filename " + output_filename + ", saved." 
-
-# example of re usage
-x = ['This is a TK1000356.', 'TK1000345', 'adjf adjfd TK1003845 ajdlfjad.']
-print (re.search(r'TK\d+', x[0]).string)
