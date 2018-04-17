@@ -18,13 +18,23 @@ def reg_row_parser(regex, filename):
     rows = []
     for record in file:
         for pattern in regex:
+            # This is where you should add additional fields if you would like them
+            fields = [
+                      filename,                                         # filename
+                      record.annotations['date'],                       # date
+                      record.annotations['accessions'][0]               # accession number
+                     ]
+
             if re.search(pattern, record.description, re.IGNORECASE):
-                # fields to be included in output file.
-                fields = [
-                          filename,                                                             # filename
-                          record.annotations['accessions'][0],                                  # accession number
-                          re.search(pattern, record.description, re.IGNORECASE).group(0)        # TK/TM/TTU Number
-                         ]
+                fields.append( re.search(pattern, record.description, re.IGNORECASE).group(0) )                 # tk/ttu/etc regex match in description 
+                rows.append(fields)
+                continue
+            elif re.search(pattern, record.annotations['source'], re.IGNORECASE):
+                fields.append( re.search(pattern, record.annotations['source'], re.IGNORECASE).group(0) )       # tk/ttu/etc regex match in source 
+                rows.append(fields)
+                continue
+            elif re.search(pattern, record.annotations['organism'], re.IGNORECASE):
+                fields.append( re.search(pattern, record.annotations['organism'], re.IGNORECASE).group(0) )     # tk/ttu/etc regex match in organism 
                 rows.append(fields)
                 continue
     return rows
@@ -57,7 +67,7 @@ def default_search():
             ]
     return regex
 
-def reaper(regex=default_search(),output_file="definition.csv"):
+def reaper(regex=default_search(),output_file="matches.csv"):
     """usage: reaper([r'TK\d+', r'TM\d+', r'TK \d+'])"""
     input_dir = "../ftp.ncbi.nlm.nih.gov/genbank/"
     input_files = [input_dir + file for file in os.listdir(input_dir)] 
