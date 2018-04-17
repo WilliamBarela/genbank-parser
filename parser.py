@@ -23,12 +23,6 @@ def reg_row_parser(regex, filename):
             rows.append(fields)
     return rows
 
-def reaper():
-    """ Don't use the reaper, it eats up too much memory """
-    files = os.listdir("./")
-    records = [records.extend(seq_to_dict(file)) for file in files]
-    return records 
-
 def save_to_csv(regex, input_filename, output_filename):
     data = reg_row_parser(regex, input_filename)
     file = open(output_filename, 'a')
@@ -36,7 +30,16 @@ def save_to_csv(regex, input_filename, output_filename):
         # csv_file = csv.writer(file, delimiter=',')                    # for windows style endings
         csv_file = csv.writer(file, delimiter=',', lineterminator="\n") # for unix style endings
         csv_file.writerows(data)
-        print("CSV with filename " + output_filename + ", had " + str(len(data)) + " rows saved.")
+        print("CSV with filename " + output_filename + ", had " + str(len(data)) + " rows saved from " + input_filename)
     finally:
         file.close()
     return None 
+
+def reaper(regex,output_file="TK_definition.csv"):
+    """just need to run reaper(r'TK\d+')"""
+    input_dir = "../ftp.ncbi.nlm.nih.gov/genbank/"
+    input_files = [input_dir + file for file in os.listdir(input_dir)] 
+
+    for file in input_files:
+        save_to_csv(regex, file, output_file)
+    return "done." 
