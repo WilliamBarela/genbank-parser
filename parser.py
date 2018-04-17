@@ -7,17 +7,6 @@ def seq_to_dict(filename):
     file = SeqIO.parse(filename, 'gb')
     return [record for record in file]
 
-def data_parser(filename):
-    file = seq_to_dict(filename)
-    rows = [[filename, record.annotations['accessions'], record.description] if re.search(r'TK\d+', record.description).string else None for record in file]
-    rows.remove(None)
-    
-def reg_parser(regex, filename):
-    """An example of regex here is r'TK\d+' """
-    file = seq_to_dict(filename)
-    for record in file:
-        print (record.annotations['accessions'][0] + ", " + re.search(regex, record.description).group(0)) if re.search(regex, record.description) else None
-
 def reg_row_parser(regex, filename):
     """An example of regex here is r'TK\d+' """
     file = seq_to_dict(filename)
@@ -40,11 +29,14 @@ def reaper():
     records = [records.extend(seq_to_dict(file)) for file in files]
     return records 
 
-def save_to_csv(input_filename, output_filename, data):
-    file = open(output_filename, 'ab')
+def save_to_csv(regex, input_filename, output_filename):
+    data = reg_row_parser(regex, input_filename)
+    file = open(output_filename, 'a')
     try:
-        csv_file = csv.writer(file, delimiter=',')
+        # csv_file = csv.writer(file, delimiter=',')                    # for windows style endings
+        csv_file = csv.writer(file, delimiter=',', lineterminator="\n") # for unix style endings
         csv_file.writerows(data)
+        print("CSV with filename " + output_filename + ", had " + str(len(data)) + " rows saved.")
     finally:
         file.close()
-    return "CSV with filename " + output_filename + ", saved." 
+    return None 
