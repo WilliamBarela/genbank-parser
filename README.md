@@ -2,7 +2,8 @@
 
 ## Usage
 ```
-reaper(r'TK\d+')
+from parser import reaper
+reaper()
 ```
 
 FIXME: Make reaper handle list of regex statements
