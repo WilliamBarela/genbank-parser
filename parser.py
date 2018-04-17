@@ -38,6 +38,15 @@ def reg_row_parser(regex, filename):
             fields = [
                       filename,                                         # filename
                       record.annotations['date'],                       # date
+                      record.description,                               # definition
+                      record.annotations['sequence_version'],           # sequence version
+                      record.annotations['source'],                     # source
+                      record.annotations['references'][0].authors,      # authors of reference 1
+                      record.annotations['references'][0].title,        # authors of reference 1
+                      record.annotations['references'][0].journal,      # authors of reference 1
+                      record.annotations['references'][1].authors,      # authors of reference 2
+                      record.annotations['references'][1].title,        # authors of reference 2
+                      record.annotations['references'][1].journal,      # authors of reference 2
                       record.annotations['accessions'][0]               # accession number
                      ]
 
