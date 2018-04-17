@@ -1,5 +1,13 @@
 # genbank-parser
 
+## Usage
+```
+reaper(r'TK\d+')
+```
+
+FIXME: Make reaper handle list of regex statements
+FIXME: Check other fields than description
+
 ## getting GenBank data from FTP server
 ```
 wget -r 'ftp://ftp.ncbi.nlm.nih.gov/genbank/gbmam*'   # by default, wget retries 20 times: --tries=20; max: --tries=inf
