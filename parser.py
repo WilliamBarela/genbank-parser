@@ -41,7 +41,7 @@ def save_to_csv(regex, input_filename, output_filename):
         file.close()
     return None 
 
-def reaper(regex,output_file="TK_definition.csv"):
+def reaper(regex=[r'TK \d+', r'TK\d+', r'TTU \d+', r'TTU\d+', r'TTUM \d+', r'TTUM\d+', r'TTU M \d+', r'TTU M\d+', r'TTU-M \d+', r'TTU-M\d+'],output_file="TK_definition.csv"):
     """usage: reaper([r'TK\d+', r'TM\d+', r'TK \d+'])"""
     input_dir = "../ftp.ncbi.nlm.nih.gov/genbank/"
     input_files = [input_dir + file for file in os.listdir(input_dir)] 
