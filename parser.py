@@ -26,6 +26,26 @@ def seq_to_dict(filename):
 def array_checker(input):
     return [input] if type(input)==str else input
 
+def reference(record, reference_no, field):
+    reference_len = len(record.annotations['references'])
+    if reference_no <= reference_len:
+        reference_no = reference_no - 1
+        if hasattr(record.annotations['references'][reference_no], field):
+            return getattr(record.annotations['references'][reference_no], field)
+    else:
+        return "NA"
+    
+
+def references(record):
+    return [
+            reference(record, 1, 'authors'),      # authors of reference 1
+            reference(record, 1, 'title'),        # authors of reference 1
+            reference(record, 1, 'journal'),      # authors of reference 1
+            reference(record, 2, 'authors'),      # authors of reference 2
+            reference(record, 2, 'title'),        # authors of reference 2
+            reference(record, 2, 'journal')       # authors of reference 2
+           ]
+
 def reg_row_parser(regex, filename):
     """An example of regex here is r'TK\d+' """
     file = seq_to_dict(filename)
@@ -47,26 +67,31 @@ def reg_row_parser(regex, filename):
             # tk/ttu/etc regex match in description 
             if re.search(pattern, record.description, re.IGNORECASE):
                 fields.append( re.search(pattern, record.description, re.IGNORECASE).group(0) )
+                fields.extend(references(record))
                 rows.append(fields)
                 continue
             # tk/ttu/etc regex match in source 
             elif re.search(pattern, record.annotations['source'], re.IGNORECASE):
                 fields.append( re.search(pattern, record.annotations['source'], re.IGNORECASE).group(0) )
+                fields.extend(references(record))
                 rows.append(fields)
                 continue
             # tk/ttu/etc regex match in organism 
             elif re.search(pattern, record.annotations['organism'], re.IGNORECASE):
                 fields.append( re.search(pattern, record.annotations['organism'], re.IGNORECASE).group(0) )
+                fields.extend(references(record))
                 rows.append(fields)
                 continue
             # tk/ttu/etc regex match in features organsim if it exists
             elif 'organism' in record.features[0].qualifiers and re.search(pattern, record.features[0].qualifiers['organism'][0], re.IGNORECASE):
                 fields.append( re.search(pattern, record.features[0].qualifiers['organism'][0], re.IGNORECASE).group(0) )
+                fields.extend(references(record))
                 rows.append(fields)
                 continue
             # tk/ttu/etc regex match in features specimen_voucher if it exists
             elif 'specimen_voucher' in record.features[0].qualifiers and re.search(pattern, record.features[0].qualifiers['specimen_voucher'][0], re.IGNORECASE):
                 fields.append( re.search(pattern, record.features[0].qualifiers['specimen_voucher'][0], re.IGNORECASE).group(0) )
+                fields.extend(references(record))
                 rows.append(fields)
                 continue
 
