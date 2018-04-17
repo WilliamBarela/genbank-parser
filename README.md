@@ -12,6 +12,7 @@ To do this, run `get_data.sh`
 Then, you need to run the reaper to glean the data from the above downloaded files.
 
 ```
+# in python or ipython (prefereable)
 from parser import reaper
 reaper()
 ```
