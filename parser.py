@@ -57,6 +57,7 @@ def reg_row_parser(regex, filename):
             # This is where you should add additional fields if you would like them
             fields = [
                       filename,                                         # filename
+                      record.annotations["data_file_division"],         # which database
                       record.annotations['date'],                       # date
                       record.description,                               # definition
                       record.annotations['sequence_version'],           # sequence version
@@ -98,22 +99,24 @@ def reg_row_parser(regex, filename):
     return rows
 
 def save_to_csv(regex, input_filename, output_filename):
-    data = reg_row_parser(regex, input_filename)
-    file = open(output_filename, 'a')
     try:
         # csv_file = csv.writer(file, delimiter=',')                                            # for windows style endings
+        data = reg_row_parser(regex, input_filename)
+        file = open(output_filename, 'a')
         csv_file = csv.writer(file, delimiter=',', lineterminator="\n")                         # for unix style endings
         csv_file.writerows(data)
         print("CSV with filename " + output_filename + ", had " + str(len(data)) + " rows saved from " + input_filename)
-    finally:
         file.close()
+    except:
+        print(input_filename +  "could not be opened because format is incorrect")
     return None 
 
-def reaper(regex=default_search(),output_file="matches.csv"):
+def reaper(regex=default_search(),output_file="master.csv"):
     """usage: reaper([r'TK\d+', r'TM\d+', r'TK \d+'])"""
     input_dir = "../ftp.ncbi.nlm.nih.gov/genbank/"
     input_files = [input_dir + file for file in os.listdir(input_dir)] 
 
     for file in input_files:
         save_to_csv(regex, file, output_file)
+        #save_to_csv(regex, input_dir + file, output_file)
     return "done." 
